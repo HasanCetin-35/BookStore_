@@ -6,4 +6,4 @@
 
 //db rolleri ekle oradan çek kod üzerinde ki rolleri db den çek
 
-//locale git mimarisinin kurulması ve yönetimi  --biliyorum alksndkalsdadas
+//locale git mimarisinin kurulması ve yönetimi  --biliyorum alksndkalsdadasasdasdas
