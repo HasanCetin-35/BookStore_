@@ -1,0 +1,38 @@
+/* Ana kapsayıcı */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Yatayda ortalama */
+  
+  min-height: 100vh; /* Sayfanın tamamını kaplasın */
+  text-align: center; /* Metni ortala */
+}
+
+/* Tablo */
+.book-table {
+  border-collapse: collapse;
+  width: 80%; /* Tablo genişliği */
+  margin: 20px 0;
+}
+
+.book-table th,
+.book-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.book-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+/* Başarı ve hata mesajları */
+.success-message {
+  color: green;
+  margin-top: 20px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 20px;
+}

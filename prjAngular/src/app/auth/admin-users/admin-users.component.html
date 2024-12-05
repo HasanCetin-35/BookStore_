@@ -1,0 +1,35 @@
+<div class="search-bar">
+  <input 
+    type="text" 
+    [(ngModel)]="searchText" 
+    class="form-control" 
+    placeholder="Kullanıcı adı ile ara..."
+    (ngModelChange)="onSearchChange()"  
+  />
+</div>
+
+<!-- Kullanıcılar Listesi -->
+<div *ngIf="filteredUsers.length > 0">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Kullanıcı Adı</th>
+        <th>Email</th>
+        <th>İşlemler</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers">
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <button (click)="deleteUser(user.id)" class="btn btn-danger btn-sm">Sil</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Başarı ve Hata Mesajları -->
+<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>

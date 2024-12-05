@@ -1,0 +1,55 @@
+<div class="search-bar">
+  <input 
+    type="text" 
+    [(ngModel)]="searchText" 
+    class="form-control" 
+    placeholder="Kullanıcı adı ile ara..." 
+  />
+</div>
+
+<div *ngFor="let user of filteredUsers()">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Kullanıcı Adı</th>
+        <th>Email</th>
+        <th>Roller</th>
+        <th>Rol Kaldır</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let role of user.roles">
+              {{ role }} 
+              <button *ngIf="role !== 'user'" (click)="removeRole(user.id, role)" class="btn btn-danger btn-sm">Kaldır</button>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <div>
+            <label>
+              <input type="radio" name="role-{{ user.id }}" [(ngModel)]="roleToAdd[user.id]" value="Moderator" />
+              Moderator
+            </label>
+            <label>
+              <input type="radio" name="role-{{ user.id }}" [(ngModel)]="roleToAdd[user.id]" value="Editor" />
+              Editor
+            </label>
+            <label>
+              <input type="radio" name="role-{{ user.id }}" [(ngModel)]="roleToAdd[user.id]" value="Support" />
+              Support
+            </label>
+          </div>
+          <button (click)="addRole(user.id)" class="btn btn-success btn-sm">Rol Ekle</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>

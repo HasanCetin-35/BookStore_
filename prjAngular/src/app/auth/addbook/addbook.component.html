@@ -1,0 +1,19 @@
+<div class="add-book-form">
+    <h2>Kitap Ekle</h2>
+    <form (ngSubmit)="addBook()">
+      <label for="bookName">Kitap Adı:</label>
+      <input type="text" id="bookName" [(ngModel)]="bookName" name="bookName" required />
+  
+      <label for="category">Kategori:</label>
+      <input type="text" id="category" [(ngModel)]="category" name="category" required />
+  
+      <label for="author">Yazar:</label>
+      <input type="text" id="author" [(ngModel)]="author" name="author" required />
+  
+      <button type="submit">Kitap Ekle</button>
+    </form>
+  
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </div>
+  

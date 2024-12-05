@@ -1,0 +1,75 @@
+.comments-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comments-container h1 {
+    text-align: center;
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .loading {
+    text-align: center;
+    font-size: 18px;
+    color: #007bff;
+    padding: 20px;
+  }
+  
+  .no-comments {
+    text-align: center;
+    font-size: 18px;
+    color: #f39c12;
+    padding: 20px;
+  }
+  
+  .comments-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .comments-table th, .comments-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .comments-table th {
+    background-color: #007bff;
+    color: white;
+    font-size: 18px;
+  }
+  
+  .comments-table td {
+    background-color: #f9f9f9;
+    font-size: 16px;
+  }
+  
+  .comments-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .comments-table td, .comments-table th {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
+  
+  .comments-table td:last-child, .comments-table th:last-child {
+    border-right: none;
+  }
+  
+  .comments-table td:first-child, .comments-table th:first-child {
+    border-left: none;
+  }
+  
+  .no-comments p {
+    font-size: 18px;
+    color: #e74c3c;
+  }
+  

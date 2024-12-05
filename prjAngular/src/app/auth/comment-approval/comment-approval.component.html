@@ -1,0 +1,42 @@
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Yorum Onaylama</h1>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Yorum</th>
+        <th>Durum</th>
+        <th>Onayla</th>
+        <th>Reddet</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let comment of comments">
+        <td>{{ comment.text }}</td>
+        <td>
+          <span *ngIf="comment.isApproved === 'Approved'">Yayında</span>
+          <span *ngIf="comment.isApproved === 'Rejected'">Reddedildi</span>
+          <span *ngIf="comment.isApproved === 'Pending'">Onay Bekliyor</span>
+        </td>
+        <td>
+          <button
+            *ngIf="comment.isApproved === 'Pending'"
+            class="btn btn-success"
+            (click)="approveComment(comment.id)"
+          >
+            Onayla
+          </button>
+        </td>
+        <td>
+          <button
+            *ngIf="comment.isApproved === 'Pending'"
+            class="btn btn-danger"
+            (click)="rejectComment(comment.id)"
+          >
+            Reddet
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

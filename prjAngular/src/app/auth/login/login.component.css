@@ -1,0 +1,47 @@
+.login-container {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  input {
+    width: 92%;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+  }
+  
+  .error {
+    color: red;
+  }
+  .signup-redirect {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .signup-link {
+    font-weight: bold; /* Kalın yazı */
+    color: #007bff; /* Mavi tıklanabilir renk */
+    cursor: pointer; /* İmleç el şeklinde olur */
+    text-decoration: underline; /* Altı çizili */
+  }
+  
+  .signup-link:hover {
+    color: #0056b3; /* Hover ile renk değişimi */
+    text-decoration: none; /* Hover'da alt çizgiyi kaldırır */
+  }
+  

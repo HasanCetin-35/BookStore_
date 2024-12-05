@@ -1,0 +1,75 @@
+/* user.component.css */
+
+/* Genel kapsayıcı stil */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Kullanıcı Bilgileri Tablosu */
+.user-info h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.table th, .table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.table td {
+  background-color: #f9f9f9;
+}
+
+/* Yorumlar Tablosu */
+.comment-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Henüz yorum yapılmamış durumu */
+.no-comments {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+}
+.badge {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-transform: capitalize;
+  display: inline-block;
+  margin: 5px;
+}
+
+/* Onaylanmış yorum (Approved) için yeşil badge */
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Onay bekleyen yorum (Pending) için sarı badge */
+.badge-warning {
+  background-color: #ffc107;
+  color: black;
+}
+
+/* Reddedilmiş yorum (Rejected) için kırmızı badge */
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+}

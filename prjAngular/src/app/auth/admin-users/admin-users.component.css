@@ -1,0 +1,81 @@
+/* Ana konteyner */
+.users-list {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Başlık */
+  .users-list h1 {
+    text-align: center;
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Hata mesajı */
+  .error-message {
+    color: #e74c3c;
+    font-size: 1em;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    background-color: #fcebea;
+  }
+  
+  /* Kullanıcı bulunamadığında gösterilen mesaj */
+  .no-users {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 1em;
+    margin-top: 20px;
+  }
+  
+  /* Tablo stil ayarları */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.9em;
+  }
+  
+  .table th,
+  .table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Tablo başlığı */
+  .table thead th {
+    background-color: #3498db;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9em;
+  }
+  
+  /* Tablo satırları */
+  .table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #dff9fb;
+  }
+  
+  /* Tablo hücrelerinde linkler için düzenleme */
+  .table a {
+    color: #3498db;
+    text-decoration: none;
+  }
+  
+  .table a:hover {
+    text-decoration: underline;
+  }
+  

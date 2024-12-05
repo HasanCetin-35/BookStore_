@@ -1,0 +1,45 @@
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- Ana Sayfa ve Giriş Linki -->
+    <a routerLink="/" class="navbar-logo">Kitaplık</a>
+
+    <!-- Kullanıcı Girişi Durumuna Göre Değişiklik -->
+    <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+      <a routerLink="/login" class="navbar-link">Giriş Yap</a>
+    </ng-container>
+
+    <ng-template #loggedIn>
+      <span class="navbar-welcome">Hoşgeldiniz
+        
+      </span>
+
+      <!-- Kullanıcı Paneli ve Admin Paneli -->
+      <ng-container *ngIf=authService.isUser()>
+        <a routerLink="/user" class="navbar-link navbar-dashboard-button">Kullanıcı Paneli</a>
+      </ng-container>
+      <ng-container *ngIf="authService.hasRole('Moderator')">
+        <a routerLink="/comment" class="navbar-link navbar-dashboard-button">Yorum Kontrolü</a>
+      </ng-container>
+      <ng-container *ngIf="authService.hasRole('Moderator')">
+        <a routerLink="/books" class="navbar-link navbar-dashboard-button">Kitap Yönetimi</a>
+      </ng-container>
+      
+      <ng-container *ngIf="authService.hasRole('Editor')">
+        <a routerLink="/addbooks" class="navbar-link navbar-dashboard-button">Kitap Ekle</a>
+      </ng-container>
+      <ng-container *ngIf="authService.hasRole('Support')">
+        <a routerLink="/comment-approved" class="navbar-link navbar-dashboard-button">Bekleyen Yorumlar</a>
+      </ng-container>
+
+
+      <!-- Admin için ek buton -->
+      <ng-container *ngIf="authService.isAdmin()">
+        <a routerLink="/admin" class="navbar-link navbar-dashboard-button">Admin Paneli</a>
+      </ng-container>
+
+      <button (click)="logout()" class="navbar-button" >Çıkış Yap</button>
+    </ng-template>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>
