@@ -14,12 +14,9 @@ namespace MyProject.Services
 
     public async Task CreateAsync(UserRole userRole)
     {
-        // Kullanıcının bu rolü zaten var mı kontrol et
         var existingUserRole = await _context.UserRoles
             .Where(ur => ur.UserId == userRole.UserId && ur.RoleId == userRole.RoleId)
             .FirstOrDefaultAsync();
-
-        // Eğer kullanıcı rolü yoksa, yeni rolü ekle
         if (existingUserRole == null)
         {
             _context.UserRoles.Add(userRole);

@@ -16,12 +16,12 @@ namespace MyProject.Services
             _context = context;
         }
 
-        // Rol ismine göre rolü almak
+
         public async Task<Role?> GetRoleByNameAsync(string rolename) => await _context.Roles
                                  .Where(r => r.RoleName == rolename)
                                  .FirstOrDefaultAsync();
 
-        // Rol eklemek
+     
         public async Task AddRoleAsync(Role role)
         {
             if (await _context.Roles.AnyAsync(r => r.RoleName == role.RoleName))
@@ -33,7 +33,7 @@ namespace MyProject.Services
             await _context.SaveChangesAsync();
         }
 
-        // Rol silmek
+      
         public async Task RemoveRoleAsync(Guid roleId)
         {
             var role = await _context.Roles.FindAsync(roleId);

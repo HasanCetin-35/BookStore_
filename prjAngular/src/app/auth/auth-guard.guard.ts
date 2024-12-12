@@ -27,10 +27,9 @@ export class AuthGuard implements CanActivate {
           return [false];
         }
 
-        // Kullanıcıyı ve rollerini kontrol et
+       
         return this.authService.getUserRoles(user.id).pipe(
           map(roles => {
-            // Gerekli roller varsa, kullanıcıya izin ver
             const requiredRoles: string[] = route.data['roles'];
 
             if (requiredRoles && requiredRoles.some(role => roles.includes(role))) {

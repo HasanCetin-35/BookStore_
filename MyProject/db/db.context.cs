@@ -10,8 +10,8 @@ namespace MyProject
         public required DbSet<User> Users { get; set; }
         public required DbSet<Comment> Comments { get; set; }
         public required DbSet<Book> Books { get; set; }
-        public required DbSet<Role> Roles { get; set; }  // Role tablosu
-        public required DbSet<UserRole> UserRoles { get; set; }  // UserRole tablosu
+        public required DbSet<Role> Roles { get; set; }  
+        public required DbSet<UserRole> UserRoles { get; set; }  
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,8 +20,8 @@ namespace MyProject
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<Comment>().ToTable("comment");
             modelBuilder.Entity<Book>().ToTable("books");
-            modelBuilder.Entity<Role>().ToTable("roles"); // Role tablosu
-            modelBuilder.Entity<UserRole>().ToTable("UserRoles"); // UserRoles tablosu
+            modelBuilder.Entity<Role>().ToTable("roles"); 
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles");
 
             // User -> UserRoles
             modelBuilder.Entity<UserRole>()
@@ -55,7 +55,7 @@ namespace MyProject
             // Comment -> User
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.User)
-                .WithMany(u => u.CommentIds) // "CommentIds" yerine "Comments" olmalı
+                .WithMany(u => u.CommentIds) 
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
