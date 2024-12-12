@@ -12,10 +12,10 @@ namespace MyProject.Services
             _dbContext = context;
         }
 
-        // Kullanıcıya rol ekleme
+        
         public async Task AddRoleToUserAsync(Guid userId, string roleName)
         {
-            // Kullanıcıyı ve rolü bul
+           
             var user = await _dbContext.Users.FindAsync(userId);
             var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName);
 
@@ -24,7 +24,7 @@ namespace MyProject.Services
                 throw new Exception("User or role not found");
             }
 
-            // Kullanıcının zaten bu role sahip olup olmadığını kontrol et
+            
             var existingUserRole = await _dbContext.UserRoles
                 .Where(ur => ur.UserId == userId && ur.RoleId == role.Id)
                 .FirstOrDefaultAsync();
@@ -42,11 +42,11 @@ namespace MyProject.Services
             }
         }
 
-        // Kullanıcının rolünü kaldırma
+        
         public async Task RemoveRoleFromUserAsync(Guid userId, string roleName)
 
         {
-            // Kullanıcıyı ve rolü bul
+            
             var user = await _dbContext.Users.FindAsync(userId);
             var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName);
 
@@ -55,14 +55,14 @@ namespace MyProject.Services
                 throw new Exception("User or role not found");
             }
 
-            // Kullanıcının bu role sahip olup olmadığını kontrol et
+            
             var userRole = await _dbContext.UserRoles
                 .Where(ur => ur.UserId == userId && ur.RoleId == role.Id)
                 .FirstOrDefaultAsync();
 
             if (userRole != null)
             {
-                // UserRole'u kaldır
+               
                 _dbContext.UserRoles.Remove(userRole);
                 await _dbContext.SaveChangesAsync();
             }
