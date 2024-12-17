@@ -209,7 +209,7 @@ namespace MyProject.Controllers
         {
             try
             {
-                await _roleManagementService.AddRoleToUserAsync(updateRoleDto.UserId, updateRoleDto.roleName);
+                await _roleManagementService.AddRoleToUserAsync(updateRoleDto.UserId, updateRoleDto.RoleName);
                 return Ok(new { message = "Role added to user successfully." });
             }
             catch (Exception ex)
@@ -223,7 +223,7 @@ namespace MyProject.Controllers
         {
             try
             {
-                await _roleManagementService.RemoveRoleFromUserAsync(updateRoleDto.UserId, updateRoleDto.roleName);
+                await _roleManagementService.RemoveRoleFromUserAsync(updateRoleDto.UserId, updateRoleDto.RoleName);
                 return Ok(new { message = "Role removed from user successfully." });
             }
             catch (Exception ex)
