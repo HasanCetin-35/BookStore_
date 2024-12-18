@@ -17,6 +17,20 @@ namespace MyProject.Controllers
             _roleService = roleService;
         }
 
+        [HttpGet("get-all-roles")]
+        public async Task<IActionResult> GetAllRoles()
+        {
+            try
+            {
+                var roles = await _roleService.GetAllRolesAsync();
+                return Ok(roles); // Rolleri döndür
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error occurred while fetching roles: {ex.Message}");
+            }
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto roleDto)
         {

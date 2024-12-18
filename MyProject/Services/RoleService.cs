@@ -176,5 +176,26 @@ namespace MyProject.Services
             return userRolesWithPermissions;
         }
 
+        public async Task<List<UserRoleDto>> GetAllRolesAsync()
+        {
+            var roles = await _context.Roles
+                .Include(r => r.RolePermissions) // Roller ile ilişkili izinleri dahil et
+                .ThenInclude(rp => rp.Permission) // İzin bilgilerini dahil et
+                .ToListAsync();
+
+            // Rolleri DTO'ya dönüştür
+            var roleDtos = roles.Select(role => new UserRoleDto
+            {
+                RoleId = role.Id,
+                RoleName = role.RoleName,
+                Permissions = role.RolePermissions
+                    .Select(rp => rp.Permission.PermissionName)
+                    .ToList()
+            }).ToList();
+
+            return roleDtos;
+        }
+
+
     }
 }
