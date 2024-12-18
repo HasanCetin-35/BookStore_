@@ -1,55 +1,75 @@
-<div class="search-bar">
-  <input 
-    type="text" 
-    [(ngModel)]="searchText" 
-    class="form-control" 
-    placeholder="Kullanıcı adı ile ara..." 
-  />
-</div>
+<div class="container">
+  <h1>Kullanıcı Yönetimi</h1>
 
-<div *ngFor="let user of filteredUsers()">
-  <table class="table table-bordered">
+  <!-- Arama Kutusu -->
+  <input
+    type="text"
+    [(ngModel)]="searchText"
+    class="form-control mb-3"
+    placeholder="Kullanıcı arayın..."
+  />
+
+  <!-- Başarı ve Hata Mesajları -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Kullanıcı Tablosu -->
+  <table class="table table-striped">
     <thead>
       <tr>
         <th>Kullanıcı Adı</th>
-        <th>Email</th>
         <th>Roller</th>
-        <th>Rol Kaldır</th>
+        <th>Rol Ekle</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr *ngFor="let user of filteredUsers()">
         <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
         <td>
           <ul>
             <li *ngFor="let role of user.roles">
-              {{ role }} 
-              <button *ngIf="role !== 'user'" (click)="removeRole(user.id, role)" class="btn btn-danger btn-sm">Kaldır</button>
+              {{ role }}
+              <button
+                (click)="removeRole(user.id, role)"
+                class="btn btn-danger btn-sm ms-2"
+              >
+                Kaldır
+              </button>
             </li>
           </ul>
         </td>
         <td>
           <div>
-            <label>
-              <input type="radio" name="role-{{ user.id }}" [(ngModel)]="roleToAdd[user.id]" value="Moderator" />
-              Moderator
-            </label>
-            <label>
-              <input type="radio" name="role-{{ user.id }}" [(ngModel)]="roleToAdd[user.id]" value="Editor" />
-              Editor
-            </label>
-            <label>
-              <input type="radio" name="role-{{ user.id }}" [(ngModel)]="roleToAdd[user.id]" value="Support" />
-              Support
-            </label>
+            <select [(ngModel)]="roleToAdd[user.id]" class="form-select">
+              <option value="" disabled selected>Rol seçin</option>
+              <option *ngFor="let role of roles" [value]="role.roleName">
+                {{ role.roleName }}
+              </option>
+            </select>
+
+            <button
+              (click)="addRole(user.id)"
+              class="btn btn-success btn-sm mt-2"
+            >
+              Rol Ekle
+            </button>
           </div>
-          <button (click)="addRole(user.id)" class="btn btn-success btn-sm">Rol Ekle</button>
+
+          <div *ngIf="roleToAdd[user.id]">
+            <p><strong>Seçili Rol:</strong> {{ roleToAdd[user.id] }}</p>
+            <p><strong>İzinler:</strong></p>
+            <ul>
+              <li *ngFor="let permission of getPermissionsForRole(roleToAdd[user.id])">
+                {{ permission }}
+              </li>
+            </ul>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
-
-<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>

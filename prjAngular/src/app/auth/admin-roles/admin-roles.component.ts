@@ -7,12 +7,13 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./admin-roles.component.css']
 })
 export class AdminRolesComponent implements OnInit {
-  users: any[] = []; 
-  successMessage: string = ''; 
-  errorMessage: string = ''; 
-  isLoading: boolean = false; 
-  roleToAdd: { [key: string]: string } = {}; 
-  searchText: string = ''; 
+  users: any[] = [];
+  roles: any[] = [];
+  successMessage: string = '';
+  errorMessage: string = '';
+  isLoading: boolean = false;
+  roleToAdd: { [key: string]: string } = {};
+  searchText: string = '';
 
   private apiUrl = 'http://localhost:5041/api/Users';
 
@@ -20,6 +21,7 @@ export class AdminRolesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers();
+    this.getAllRoles();
   }
 
   getUsers(): void {
@@ -40,6 +42,18 @@ export class AdminRolesComponent implements OnInit {
       },
       (error) => {
         this.errorMessage = 'Kullanıcılar alınırken bir hata oluştu.';
+        console.error(error);
+      }
+    );
+  }
+  getAllRoles(): void {
+    const rolesApiUrl = 'http://localhost:5041/api/roles/get-all-roles';
+    this.http.get<any[]>(rolesApiUrl).subscribe(
+      (response) => {
+        this.roles = response;
+      },
+      (error) => {
+        this.errorMessage = 'Roller alınırken bir hata oluştu.';
         console.error(error);
       }
     );
@@ -112,5 +126,9 @@ export class AdminRolesComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+  getPermissionsForRole(roleName: string): string[] {
+    const role = this.roles.find(r => r.roleName === roleName);
+    return role ? role.permissions : [];
   }
 }
