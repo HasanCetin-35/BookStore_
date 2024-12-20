@@ -8,6 +8,7 @@ namespace MyProject.Models
 
         // İlişki
         public ICollection<UserRole>? UserRoles { get; set; } // UserRoles ile ilişki
+        public ICollection<RolePermission>? RolePermissions { get; set; } // İzinler ile ilişki
     }
 
 }

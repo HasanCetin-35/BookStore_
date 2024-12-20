@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from './auth.service';
-  // Kullanıcı ve rollerle ilgili API servisiniz
 
 @Injectable({
   providedIn: 'root',
@@ -11,36 +8,62 @@ import { AuthService } from './auth.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
-    private router: Router,
-   
+    private router: Router
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.authService.getUserByToken().pipe(
-      switchMap(user => {
-        // Eğer kullanıcı yoksa, login sayfasına yönlendir
-        if (!user) {
+  ): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.authService.getUserByToken().subscribe(
+        user => {
+          if (!user) {
+            // Kullanıcı yoksa login sayfasına yönlendir
+            this.router.navigate(['/login']);
+            resolve(false);
+            return;
+          }
+
+          // Kullanıcı rol kontrolü
+          const requiredRoles: string[] = route.data['roles'] || [];
+          if (requiredRoles.length && !requiredRoles.some(role => user.roles.includes(role))) {
+            this.router.navigate(['/unauthorized']);
+            resolve(false);
+            return;
+          }
+
+          // Kullanıcı izin kontrolü
+          const requiredPermissions: string[] = route.data['permissions'] || [];
+          if (requiredPermissions.length) {
+            this.authService.getUserPermissions(user.id).subscribe(
+              permissions => {
+                const hasPermission = requiredPermissions.some(permission =>
+                  permissions.includes(permission)
+                );
+                if (hasPermission) {
+                  resolve(true);  // Erişim izni ver
+                } else {
+                  this.router.navigate(['/unauthorized']);
+                  resolve(false);
+                }
+              },
+              () => {
+                this.router.navigate(['/unauthorized']);
+                resolve(false);
+              }
+            );
+          } else {
+            // Rol ve izin kontrolü geçildiyse erişim izni ver
+            resolve(true);
+          }
+        },
+        () => {
+          // Eğer kullanıcı verisi alınamazsa login sayfasına yönlendir
           this.router.navigate(['/login']);
-          return [false];
+          resolve(false);
         }
-
-       
-        return this.authService.getUserRoles(user.id).pipe(
-          map(roles => {
-            const requiredRoles: string[] = route.data['roles'];
-
-            if (requiredRoles && requiredRoles.some(role => roles.includes(role))) {
-              return true;
-            } else {
-              this.router.navigate(['/unauthorized']);
-              return false;
-            }
-          })
-        );
-      })
-    );
+      );
+    });
   }
 }

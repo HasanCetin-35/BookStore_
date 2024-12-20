@@ -9,8 +9,9 @@ import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module'; // AuthModule'ü import ediyoruz
 import { AuthGuard } from './auth/auth-guard.guard';
-import { RouterModule } from '@angular/router';
-import { AdminUsersComponent } from './auth/admin-users/admin-users.component';
+import { AdminGuard } from './auth/admin_guard';
+import { UserGuard } from './auth/user_guard';
+
 
 
 
@@ -25,10 +26,12 @@ import { AdminUsersComponent } from './auth/admin-users/admin-users.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    AuthModule // AuthModule tüm bileşenleri içeriyor
+    AuthModule, // AuthModule tüm bileşenleri içeriyor
   ],
   providers: [
     AuthGuard,
+    AdminGuard,
+    UserGuard,
     AuthService,
     provideHttpClient(withFetch()),
     

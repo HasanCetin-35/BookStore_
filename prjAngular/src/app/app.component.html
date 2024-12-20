@@ -1,4 +1,4 @@
-<nav class="navbar">
+<nav  class="navbar">
   <div class="navbar-content">
     <!-- Ana Sayfa ve Giriş Linki -->
     <a routerLink="/" class="navbar-logo">Kitaplık</a>
@@ -9,35 +9,35 @@
     </ng-container>
 
     <ng-template #loggedIn>
-      <span class="navbar-welcome">Hoşgeldiniz
-        
-      </span>
+      <span class="navbar-welcome">Hoşgeldiniz</span>
 
       <!-- Kullanıcı Paneli ve Admin Paneli -->
-      <ng-container *ngIf=authService.isUser()>
+      <ng-container *ngIf="authService.hasRole('user')">
         <a routerLink="/user" class="navbar-link navbar-dashboard-button">Kullanıcı Paneli</a>
       </ng-container>
-      <ng-container *ngIf="authService.hasRole('Moderator')">
+      
+      <ng-container *ngIf="authService.hasPermission(['DeleteComment','ListComments','ViewCommentStatus'])">
         <a routerLink="/comment" class="navbar-link navbar-dashboard-button">Yorum Kontrolü</a>
       </ng-container>
-      <ng-container *ngIf="authService.hasRole('Moderator')">
+      <!-- Kitap Yönetimi YApıldı -->
+      <ng-container *ngIf="authService.hasPermission(['ListBooks','DeleteBook'])">
         <a routerLink="/books" class="navbar-link navbar-dashboard-button">Kitap Yönetimi</a>
       </ng-container>
       
-      <ng-container *ngIf="authService.hasRole('Editor')">
+      <ng-container *ngIf="authService.hasPermission(['AddBook'])">
         <a routerLink="/addbooks" class="navbar-link navbar-dashboard-button">Kitap Ekle</a>
       </ng-container>
-      <ng-container *ngIf="authService.hasRole('Support')">
+      
+      <ng-container *ngIf="authService.hasPermission(['ApproveComment'])">
         <a routerLink="/comment-approved" class="navbar-link navbar-dashboard-button">Bekleyen Yorumlar</a>
       </ng-container>
 
-
       <!-- Admin için ek buton -->
-      <ng-container *ngIf="authService.isAdmin()">
+      <ng-container *ngIf="authService.hasRole('Admin')">
         <a routerLink="/admin" class="navbar-link navbar-dashboard-button">Admin Paneli</a>
       </ng-container>
 
-      <button (click)="logout()" class="navbar-button" >Çıkış Yap</button>
+      <button (click)="logout()" class="navbar-button">Çıkış Yap</button>
     </ng-template>
   </div>
 </nav>

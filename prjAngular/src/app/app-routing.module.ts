@@ -13,78 +13,54 @@ import { BookDetailComponent } from './auth/book-detail/book-detail.component';
 import { AdminRolesComponent } from './auth/admin-roles/admin-roles.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { CommentApprovalComponent } from './auth/comment-approval/comment-approval.component';
+import { RoleCreationComponent } from './auth/roleCreation/roleCreation.component';
+import { UserGuard } from './auth/user_guard';
+import { AdminGuard } from './auth/admin_guard';
 
 const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['Admin'] }, 
+    canActivate: [AdminGuard],
     children: [
-      {
-        path: 'addbook',  // Kitap ekleme rotası
-        component: AddBookComponent
-      },
-      {
-        path: 'users',
-        component: AdminUsersComponent,
-        canActivate: [AuthGuard],
-        data: { roles: ['Admin'] } 
-      },
-      {
-        path: 'all-comment',
-        component: CommentComponent,
-        canActivate: [AuthGuard],
-        data: { roles: ['Admin'] } 
-      },
-      {
-        path: 'all-books',
-        component: BookDetailComponent,
-        canActivate: [AuthGuard],
-        data: { roles: ['Admin'] } 
-      },{
-        path: 'role',
-        component: AdminRolesComponent,
-        canActivate: [AuthGuard],
-        data: { roles: ['Admin'] } 
-      },
-      {
-        path: 'comment-approved',
-        component: CommentApprovalComponent,
-        canActivate: [AuthGuard],
-        data: { roles: ['Admin'] }, 
-      },
-    ]
+      { path: 'addbook', component: AddBookComponent },
+      { path: 'users', component: AdminUsersComponent },
+      { path: 'all-comment', component: CommentComponent },
+      { path: 'all-books', component: BookDetailComponent },
+      { path: 'role', component: AdminRolesComponent },
+      { path: 'comment-approved', component: CommentApprovalComponent },
+      { path: 'roleCreation', component: RoleCreationComponent },
+    ],
   },
   {
     path: 'user',
     component: UserComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['user'] }, 
+    data: { roles: ['user'] }
   },
   {
     path: 'comment',
     component: CommentComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Moderator'] }, 
+    data: { permissions: ['DeleteComment','ListComments','ViewCommentStatus'] }, 
   },
   {
     path: 'books',
     component: BookDetailComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Moderator'] }, 
+    data: { permissions: ['ListBooks','DeleteBook'] }, 
   },
   {
     path: 'addbooks',
     component: AddBookComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Editor'] }, 
+    data: { permissions: ['AddBook'] }, 
   },
   {
     path: 'comment-approved',
     component: CommentApprovalComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Support'] }, 
+    data: { permissions: ['ViewCommentStatus'] }, 
   },
   
   {
