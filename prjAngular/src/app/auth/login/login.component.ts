@@ -23,48 +23,41 @@ export class LoginComponent {
   login() {
     this.authService.login(this.email, this.password).subscribe(
       response => {
-        // Token'ı kaydediyoruz
-        console.log("token", response.token);
+        console.log("Token:", response.token);
         this.authService.saveToken(response.token);
-
-        // Token ile kullanıcı bilgilerini alıyoruz
+  
         this.authService.getUserByToken().subscribe(user => {
-          console.log("user bilgileri", user);
-
           if (user) {
-            // Kullanıcı rollerini almak için API çağrısı
-            this.authService.getUserRoles(user.id).subscribe(roles => {
-              console.log("user roles", roles);
-
-              if (roles.includes('Admin')) {
-                // Admin'e yönlendir
-                console.log("girdim admin");
-                this.router.navigate(['/admin']);
-              } else if (roles.includes('user')) {
-                // Normal kullanıcıya yönlendir
-                console.log("girdim user");
-                this.router.navigate(['/user']);
-              } else {
-                // Rolü tanımlanmadıysa login sayfasına yönlendir
-                this.router.navigate(['/login']);
-              }
-            }, (error: any) => {
-              console.error("Kullanıcı rolleri alınırken hata oluştu:", error);
-              this.errorMessage = 'Kullanıcı rolleri alınırken bir hata oluştu.';
-              this.router.navigate(['/login']);
+            console.log("Kullanıcı Bilgileri:", user);
+            
+            
+            this.authService.getUserPermissions(user.id).subscribe(permissions => {
+              console.log("Kullanıcı İzinleri:", permissions);
+  
+              // Kullanıcı rolleri ve izinlerine göre yönlendirme yap
+              this.authService.getUserRoles(user.id).subscribe(roles => {
+                console.log("Kullanıcı Rolleri:", roles);
+  
+                if (roles.includes('Admin')) {
+                  this.router.navigate(['/admin']);
+                } else if (roles.includes('user')) {
+                  this.router.navigate(['/user']);
+                } else {
+                  this.router.navigate(['/login']);
+                }
+              });
             });
           } else {
-            // Eğer kullanıcı bilgileri alınamazsa login sayfasına yönlendirilir
             this.router.navigate(['/login']);
           }
         });
       },
       error => {
-        // Hata mesajı gösterme
         this.errorMessage = 'Login işlemi başarısız oldu, bilgilerinizi kontrol edin!';
       }
     );
   }
+  
 
   redirectToSignup() {
     this.router.navigate(['/signup']);

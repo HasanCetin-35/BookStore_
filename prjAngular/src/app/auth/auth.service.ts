@@ -16,7 +16,10 @@ export class AuthService {
   private role: string[] = [];  // Rolleri bir dizi olarak saklıyoruz
   private userPermissions: string[] = []
   private dene: string[] = [];
+  private isLoading: boolean = true;
   constructor(private http: HttpClient) { }
+
+  
 
   signup(userData: any): Observable<any> {
     return this.http.post<any>(`${this.signupUrl}`, userData);
@@ -77,43 +80,45 @@ export class AuthService {
     );
 }
 
-  getUserByToken(): Observable<any> {
-    const token = this.getToken();
-    if (!token) {
-        return of(null); // Token yoksa null döndürüyoruz
-    }
+getUserByToken(): Observable<any> {
+  const token = this.getToken();
+  if (!token) {
+      return of(null); // Token yoksa null döndürüyoruz
+  }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    return this.http.get<any>(this.tokenUrl, { headers }).pipe(
-        switchMap(user => {
-            if (!user) {
-                return of(null); // Kullanıcı bulunamadıysa null döndürüyoruz
-            }
+  return this.http.get<any>(this.tokenUrl, { headers }).pipe(
+      switchMap(user => {
+          if (!user) {
+              this.isLoading = false;
+              return of(null); // Kullanıcı bulunamadıysa null döndürüyoruz
+          }
 
-            console.log("Kullanıcı Bilgisi:", user);
-            this.userName = user.username;
-            this.userId = user.id;
+          this.userName = user.username;
+          this.userId = user.id;
 
-            // Kullanıcının rollerini alıp ekliyoruz
-            return this.getUserRoles(user.id).pipe(
-                map(roles => {
-                    console.log("ROLL",user);
-                    user.roles = roles; // Kullanıcının rollerini ekliyoruz
-                    return user; // Güncellenmiş kullanıcı verisini döndürüyoruz
-                })
-            );
-        }),
-        catchError(err => {
-            console.error("Hata oluştu:", err);
-            return of(null); // Hata durumunda null döndürüyoruz
-        })
-    );
+          // Kullanıcının rollerini alıp ekliyoruz
+          return this.getUserRoles(user.id).pipe(
+              map(roles => {
+                  user.roles = roles; // Kullanıcının rollerini ekliyoruz
+                  this.isLoading = false;  // Kullanıcı ve rol bilgileri yüklendiğinde loading durumu false olur
+                  return user; // Güncellenmiş kullanıcı verisini döndürüyoruz
+              })
+          );
+      }),
+      catchError(err => {
+          this.isLoading = false;
+          return of(null); // Hata durumunda null döndürüyoruz
+      })
+  );
 }
 
 
 
-
+get isUserLoading(): boolean {
+  return this.isLoading;
+}
   getUserName(): string | null {
     console.log(this.userName);
     return this.userName;
