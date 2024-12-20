@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-book-detail',
@@ -11,12 +12,13 @@ export class BookDetailComponent {
   books: any[] = [];
   successMessage: string = '';
   errorMessage: string = '';
-
+  canDeleteBook: boolean = false; 
   private apiUrl = 'http://localhost:5041/api/books';  
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router,private authService: AuthService) {}
   ngOnInit(): void {
-    this.getAllBooks(); 
+    this.getAllBooks();
+    this.checkPermissions(); 
   }
 
   getAllBooks() {
@@ -30,9 +32,20 @@ export class BookDetailComponent {
       }
     );
   }
+  checkPermissions(): void {
+    // Kullanıcının izinlerini al
+    this.authService.getUserByToken().subscribe((user) => {
+      if (user) {
+        this.authService.getUserPermissions(user.id).subscribe((permissions) => {
+          this.canDeleteBook = permissions.includes('DeleteBook');
+        });
+      }
+    });
+  }
 
   deleteBook(bookId: string) {
-    const deleteUrl = `${this.apiUrl}/${bookId}`;  
+    if(this.canDeleteBook){
+      const deleteUrl = `${this.apiUrl}/${bookId}`;  
 
     this.http.delete(deleteUrl).subscribe(
       (response) => {
@@ -44,5 +57,9 @@ export class BookDetailComponent {
         console.error('Error deleting book:', error);
       }
     );
+    }else{
+      this.errorMessage = 'Silme işlemi için yeterli izniniz yok.';
+    }
+    
   }
 }

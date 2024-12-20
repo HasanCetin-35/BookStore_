@@ -166,6 +166,7 @@ namespace MyProject.Services
 
                 var roleDto = new UserRoleDto
                 {
+                    RoleId = userRole.RoleId,
                     RoleName = userRole.Role.RoleName,
                     Permissions = rolePermissions.Select(rp => rp.Permission.PermissionName).ToList()
                 };

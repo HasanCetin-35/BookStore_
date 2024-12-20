@@ -61,11 +61,12 @@ export class AdminRolesComponent implements OnInit {
 
   // Kullanıcının rollerini al
   getUserRoles(userId: string): void {
-    this.http.get<string[]>(`${this.apiUrl}/${userId}/roles`).subscribe(
-      (roles) => {
+    this.http.get<{ roles: string[] }>(`${this.apiUrl}/${userId}/roles`).subscribe(
+      (response) => {
+        const roles = response.roles || [];  // API yanıtındaki "roles" dizisini alıyoruz
         const user = this.users.find(u => u.id === userId);
         if (user) {
-          user.roles = roles;  // User'ın rol listesini güncelle
+          user.roles = roles;  // Kullanıcının rollerini güncelliyoruz
         }
       },
       (error) => {
@@ -73,6 +74,8 @@ export class AdminRolesComponent implements OnInit {
       }
     );
   }
+  
+  
 
   filteredUsers(): any[] {
     if (!this.searchText) {

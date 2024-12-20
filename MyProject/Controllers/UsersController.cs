@@ -238,10 +238,10 @@ namespace MyProject.Controllers
 
             if (userRoles == null || userRoles.Count == 0)
             {
-                return NotFound("User has no roles.");
+                return NotFound(new { message = "User has no roles." });
             }
 
-            return Ok(userRoles);
+            return Ok(new { roles = userRoles }); // 'roles' sarmalayıcı nesnesi ile döndürülüyor
         }
 
 

@@ -63,7 +63,7 @@ namespace MyProject.Controllers
 
                 if (result)
                 {
-                    return Ok("Permissions assigned successfully.");
+                    return Ok(new { message = "Permissions assigned successfully." });
                 }
 
                 return BadRequest("Failed to assign permissions.");
