@@ -43,8 +43,9 @@ export class CommentComponent implements OnInit {
     this.authService.getUserByToken().subscribe((user) => {
       if (user) {
         this.authService.getUserPermissions(user.id).subscribe((permissions) => {
-          // 'DeleteComment' izni varsa, silme işlemine izin ver
-          this.canDeleteComment = permissions.includes('DeleteComment');
+          // Kullanıcının izinlerini kontrol et
+          this.canDeleteComment =
+            permissions.includes('DeleteComment') || this.authService.isAdmin(); // Admin ise veya DeleteComment izni varsa true
         });
       }
     });

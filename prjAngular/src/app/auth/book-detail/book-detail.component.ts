@@ -37,7 +37,7 @@ export class BookDetailComponent {
     this.authService.getUserByToken().subscribe((user) => {
       if (user) {
         this.authService.getUserPermissions(user.id).subscribe((permissions) => {
-          this.canDeleteBook = permissions.includes('DeleteBook');
+          this.canDeleteBook = permissions.includes('DeleteBook') || this.authService.isAdmin();
         });
       }
     });
