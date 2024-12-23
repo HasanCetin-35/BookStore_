@@ -185,6 +185,28 @@ namespace MyProject.Controllers
                 return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
             }
         }
+        [HttpDelete("{roleId}")]
+        public async Task<IActionResult> RemoveRole(Guid roleId)
+        {
+            try
+            {
+                // Rolü silme işlemi
+                await _roleService.RemoveRoleAsync(roleId);
+
+                // Başarılı işlem
+                return Ok(new { message = "Role successfully deleted." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Rol bulunamadığında hata döndür
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Diğer hatalar için genel hata mesajı döndür
+                return StatusCode(500, new { message = "An error occurred while deleting the role.", details = ex.Message });
+            }
+        }
 
 
     }

@@ -34,6 +34,7 @@
             <li *ngFor="let role of user.roles">
               {{ role }}
               <button
+              *ngIf="role !== 'user' && role !== 'Admin'"
                 (click)="removeRole(user.id, role)"
                 class="btn btn-danger btn-sm ms-2"
               >
@@ -44,7 +45,7 @@
         </td>
         <td>
           <div>
-            <select [(ngModel)]="roleToAdd[user.id]" class="form-select">
+            <select [disabled]="user.roles.includes('Admin')" [(ngModel)]="roleToAdd[user.id]" class="form-select">
               <option value="" disabled selected>Rol seçin</option>
               <option *ngFor="let role of roles" [value]="role.roleName">
                 {{ role.roleName }}
@@ -52,8 +53,10 @@
             </select>
 
             <button
+            
               (click)="addRole(user.id)"
               class="btn btn-success btn-sm mt-2"
+              [disabled]="user.roles.includes('Admin')"
             >
               Rol Ekle
             </button>

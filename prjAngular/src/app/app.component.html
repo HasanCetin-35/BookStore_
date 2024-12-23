@@ -28,7 +28,7 @@
         <a routerLink="/addbooks" class="navbar-link navbar-dashboard-button">Kitap Ekle</a>
       </ng-container>
       
-      <ng-container *ngIf="authService.hasPermission(['ApproveComment'])">
+      <ng-container *ngIf="authService.hasPermission(['ApproveComment','ViewCommentStatus'])">
         <a routerLink="/comment-approved" class="navbar-link navbar-dashboard-button">Bekleyen Yorumlar</a>
       </ng-container>
 

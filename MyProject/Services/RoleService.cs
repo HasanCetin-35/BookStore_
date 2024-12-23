@@ -168,7 +168,8 @@ namespace MyProject.Services
                 {
                     RoleId = userRole.RoleId,
                     RoleName = userRole.Role.RoleName,
-                    Permissions = rolePermissions.Select(rp => rp.Permission.PermissionName).ToList()
+                    Permissions = rolePermissions.Select(rp => rp.Permission.PermissionName).ToList(),
+                    Descriptions = rolePermissions.Select(rp => rp.Permission.Description).ToList() // Açıklamalar eklendi
                 };
 
                 userRolesWithPermissions.Add(roleDto);
@@ -244,6 +245,7 @@ namespace MyProject.Services
 
             return role.RolePermissions.Select(rp => rp.Permission).ToList();
         }
+        
 
 
 

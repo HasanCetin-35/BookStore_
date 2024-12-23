@@ -82,7 +82,9 @@ export class AdminRolesComponent implements OnInit {
       return this.users;
     }
     const lowerCaseSearch = this.searchText.toLowerCase();
-    return this.users.filter(user =>
+    return this.users
+    .filter(user => !user.roles.includes('Admin'))
+    .filter(user =>
       user.username.toLowerCase().includes(lowerCaseSearch)
     );
   }

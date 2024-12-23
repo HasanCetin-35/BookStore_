@@ -62,7 +62,7 @@ const routes: Routes = [
     path: 'comment-approved',
     component: CommentApprovalComponent,
     canActivate: [AuthGuard],
-    data: { permissions: ['ViewCommentStatus'] }, 
+    data: { permissions: ['ViewCommentStatus','ApproveComment'] }, 
   },
   
   {

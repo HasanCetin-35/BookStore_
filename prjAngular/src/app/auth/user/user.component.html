@@ -1,7 +1,32 @@
 <div class="container mt-5">
-  <h1 class="text-center mb-4">{{ userMessage }}</h1>
+  <!-- Kullanıcı Mesajı <h1 class="text-center mb-4">{{ userMessage }}</h1>-->
+  
 
-  <!-- Kullanıcı Bilgileri Tablosu -->
+  <!-- Kullanıcı Rolleri ve İzinleri -->
+  <div *ngIf="userRoles.length > 0" class="mb-4">
+    <h4 class="text-center">Rolleriniz ve İzinleriniz</h4>
+    <div class="role-list">
+      <div *ngFor="let role of userRoles" class="role-item border rounded p-3 mb-3">
+        <!-- Rol adı -->
+        <h5 class="role-name text-primary">{{ role.roleName }}</h5>
+  
+        <!-- İzinler bölümü -->
+        <p class="mb-2"><strong>İzinler:</strong></p>
+        <ul *ngIf="role.permissions.length > 0" class="list-group">
+          <li *ngFor="let permission of role.permissions; let i = index" class="list-group-item">
+            <strong>{{ permission }}</strong>
+            <br />
+            <span class="text-muted">{{ role.descriptions[i] }}</span>
+          </li>
+        </ul>
+        <!-- İzin yoksa mesaj göster -->
+        <p *ngIf="role.permissions.length === 0" class="text-muted">
+          Bu rol izin gerektirmiyor.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <hr />
 
   <!-- Yorumlar Tablosu -->
@@ -24,14 +49,21 @@
           <td>{{ comment.bookAuthor }}</td>
           <td>{{ comment.bookCategory }}</td>
           <td>
-            <span class="badge"
-                  [ngClass]="{
-                    'badge-success': comment.approved === 'Approved',
-                    'badge-warning': comment.approved === 'Pending',
-                    'badge-danger': comment.approved === 'Rejected'
-                  }">
-              {{ comment.approved === 'Approved' ? 'Yayında' : 
-                 comment.approved === 'Pending' ? 'Onay Bekliyor' : 'Reddedildi' }}
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-success': comment.approved === 'Approved',
+                'badge-warning': comment.approved === 'Pending',
+                'badge-danger': comment.approved === 'Rejected'
+              }"
+            >
+              {{
+                comment.approved === 'Approved'
+                  ? 'Yayında'
+                  : comment.approved === 'Pending'
+                  ? 'Onay Bekliyor'
+                  : 'Reddedildi'
+              }}
             </span>
           </td>
         </tr>

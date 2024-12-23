@@ -31,16 +31,17 @@ export class ManageRolesComponent implements OnInit {
 
   // Rolleri yükle
   loadRoles(): void {
-    this.isLoading = true;
+    this.isLoading = true; // Yükleme başlatılıyor
     this.http.get<any[]>(this.apiUrl).subscribe(
       (data) => {
-        this.roles = data;
-        this.isLoading = false;
+        // 'user' ve 'admin' rollerini hariç tutarak diğer rolleri sakla
+        this.roles = data.filter(role => role.roleName !== 'user' && role.roleName !== 'Admin');
+        this.isLoading = false; // Yükleme tamamlandı
       },
       (error) => {
-        this.errorMessage = 'Roller yüklenirken hata oluştu.';
-        console.error(error);
-        this.isLoading = false;
+        this.errorMessage = 'Roller yüklenirken hata oluştu.'; // Hata mesajı
+        console.error(error); // Hata bilgisi
+        this.isLoading = false; // Yükleme tamamlandı
       }
     );
   }
@@ -175,5 +176,21 @@ export class ManageRolesComponent implements OnInit {
   }
   closeModal(): void {
     this.selectedRole = null; // Modalı kapatmak için seçilen rolü sıfırlıyoruz
+  }
+  async removeRole(roleId: string): Promise<void> {
+    try {
+      const response = await this.http.delete(
+        `http://localhost:5041/api/roles/${roleId}`
+      ).toPromise();
+
+      this.successMessage = 'Rol başarıyla silindi.';
+      this.loadRoles(); // Roller listesine tekrar yükle
+      this.errorMessage = ''; // Hata mesajını sıfırla
+      this.closeModal(); // Modalı kapat
+    } catch (error) {
+      console.error('Rol silme hatası:', error);
+      this.successMessage = ''; // Başarı mesajını sıfırla
+      this.errorMessage = 'Rol silinirken bir hata oluştu.';
+    }
   }
 }

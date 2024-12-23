@@ -8,18 +8,20 @@ import { Router } from '@angular/router';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  userMessage: string = "Welcome to the User Dashboard!";
+  
   comments: any[] = []; // Yorumları tutmak için bir array
   apiUrl: string = 'http://localhost:5041/api/comments/user/comments'; // Yeni API URL'i
-  
-
+  userRoles: { roleId: string; roleName: string; permissions: string[]; descriptions:string[] }[] = [];
+  rolesApiUrl: string = 'http://localhost:5041/api/roles/get-user-roles';
   constructor(private http: HttpClient, public authService: AuthService,private router: Router) {}
-
+  
   ngOnInit(): void {
     // Kullanıcı bilgilerini alıyoruz
     this.authService.getUserByToken().subscribe(
       (user) => {
         if (user) {
+          const userId = user.id; // Kullanıcı ID'sini alıyoruz
+          this.getUserRoles(userId);
           // Yorumları almak için getUserComments fonksiyonunu çağırıyoruz
           this.getUserComments();  
         }
@@ -29,7 +31,25 @@ export class UserComponent implements OnInit {
       }
     );
   }
+  getUserRoles(userId: string): void {
+    const token = this.authService.getToken(); // Token'ı alıyoruz
+    if (token) {
+      const headers = new HttpHeaders().set(
+        'Authorization',
+        `Bearer ${token}`
+      ); // Token'ı header'a ekliyoruz
 
+      this.http.get<any[]>(`${this.rolesApiUrl}/${userId}`, { headers }).subscribe(
+        (roles) => {
+          this.userRoles = roles; // Roller ve izinleri saklıyoruz
+          console.log('Kullanıcı Rolleri:', this.userRoles);
+        },
+        (error) => {
+          console.error('Kullanıcı rolleri alınırken hata oluştu:', error);
+        }
+      );
+    }
+  }
   getUserComments(): void {
     const token = this.authService.getToken(); // Token'ı alıyoruz
     if (token) {

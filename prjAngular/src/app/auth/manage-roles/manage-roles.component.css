@@ -1,33 +1,93 @@
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+/* Kartların hizalanması ve düzenlenmesi */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Kartlar arasındaki boşluk */
 }
 
+.col {
+  flex: 1 1 23%; /* Kartların dört sütunda görüntülenmesi için 23% genişlik */
+  box-sizing: border-box; /* Kartların içeriklerinin dışarı taşmaması için */
+  display: flex;
+  flex-direction: column; /* Kartlar dikeyde düzenlensin */
+}
+
+/* Kart boyutunu eşitleme */
 .card {
-  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; /* Köşe yuvarlama */
+  overflow: hidden; /* Kartın taşan içeriklerini gizler */
+  flex: 1 1 auto; /* Kart boyutlarını eşitle */
 }
 
+/* Kart içeriği */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* İçeriği üst ve alt kısıma yayar */
+  padding: 20px;
+  height: 100%; /* Kartın tüm yüksekliğini kapsar */
+  overflow: hidden; /* Fazla içerik görünmesin */
+}
+
+/* Kart başlığı */
 .card-title {
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-.modal {
-  display: block;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
+/* Liste düzeni */
+.card-body ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-.modal-header {
-  background-color: #007bff;
-  color: white;
+/* Liste öğesi düzeni */
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.modal-footer button {
-  width: 48%;
+/* İzinler kısmının kayması */
+.card-body .list-group {
+  overflow-y: auto; /* Fazla öğe olduğunda kaydırma çubuğu ekler */
+  max-height: 150px; /* 3 öğe için belirli bir yükseklik, fazla olursa kayar */
 }
 
-.alert {
-  margin-top: 15px;
+/* İzinleri Düzenle butonunun alt kısma yerleştirilmesi */
+.card-footer {
+  margin-top: auto; /* Butonu en alta itekler */
+  display: flex;
+  justify-content: center; /* Butonu yatayda ortalar */
+  padding-top: 20px; /* Buton ile içerik arasında boşluk bırakır */
+}
+
+/* Modal için stil */
+.modal-dialog {
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+.modal-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Responsive Düzenlemeler */
+@media (max-width: 1200px) {
+  .col {
+    flex: 1 1 48%; /* 2 kart yan yana */
+  }
+}
+
+@media (max-width: 768px) {
+  .col {
+    flex: 1 1 100%; /* 1 kart alt alta */
+  }
 }
