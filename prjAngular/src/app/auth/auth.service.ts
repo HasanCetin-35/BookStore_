@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,12 @@ export class AuthService {
   private userName: string | null = null;
   private userId: string | null = null;
   private role: string[] = [];  // Rolleri bir dizi olarak saklıyoruz
-
+  private userPermissions: string[] = []
+  private dene: string[] = [];
+  private isLoading: boolean = true;
   constructor(private http: HttpClient) { }
+
+  
 
   signup(userData: any): Observable<any> {
     return this.http.post<any>(`${this.signupUrl}`, userData);
@@ -29,43 +33,92 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
+  getUserPermissions(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:5041/api/roles/get-user-roles/${userId}`).pipe(
+      map(roles => {
+        // API'den gelen rollerin yapısını kontrol etmek için log ekliyoruz
+        console.log("API'den dönen roller:", roles);
+        this.dene = roles;
+  
+        // Roller içerisindeki izinleri çıkartıyoruz
+        const permissions = roles.flatMap(role => {
+          console.log("Rol İzinleri:", role.permissions);  // Rol izinlerini kontrol et
+          return role.permissions ? role.permissions : [];  // Eğer permissions undefined veya null ise, boş dizi döndürüyoruz
+        });
+  
+        console.log("Tüm İzinler:", permissions);  // Tüm izinleri kontrol et
+  
+        // Eğer izinler boşsa, boş bir dizi döndürürüz
+        this.userPermissions = permissions.length ? permissions : [];
+        console.log("User Permissions Kaydedildi:", this.userPermissions);  // Kaydedilen izinleri kontrol et
+        return this.userPermissions;
+      }),
+      catchError(error => {
+        console.error('İzinler alınırken bir hata oluştu:', error);
+        return of([]);  // Hata durumunda boş bir dizi döndürüyoruz
+      })
+    );
+  }
+  
+  
+  
+
+  // Kullanıcıya ait belirli bir izni kontrol etmek için fonksiyon
+  hasPermission(permissions: string[]): boolean {
+    return permissions.some(permission => this.userPermissions.includes(permission));
+  }
 
   // Kullanıcının rollerini almak için API çağrısı
   getUserRoles(userId: string): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/${userId}/roles`).pipe(
-      map(roles => {
-        this.role = roles;  // Rolleri kaydediyoruz
-        return roles;
+    return this.http.get<{ roles: string[] }>(`${this.apiUrl}/${userId}/roles`).pipe(
+      map(response => {
+        console.log("İZİNLER",this.dene);
+        this.role = response.roles || [];  // roles varsa eşitlenir, yoksa boş dizi atanır
+        return this.role;  // roles dizisini döndürüyoruz
       }),
       catchError(this.handleError)
     );
+}
+
+getUserByToken(): Observable<any> {
+  const token = this.getToken();
+  if (!token) {
+      return of(null); // Token yoksa null döndürüyoruz
   }
 
-  getUserByToken(): Observable<any> {
-    const token = this.getToken(); // Token'ı al
-    if (token) {
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.get<any>(this.tokenUrl, { headers }).pipe(
-        map(user => {
-          if (user) {
-            this.userName = user.username;
-            this.userId = user.id;
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-            // Kullanıcının rollerini almak için getUserRoles fonksiyonu çağrılıyor
-            this.getUserRoles(user.id).subscribe(roles => {
-              this.role = roles;  // Rolleri kaydediyoruz
-            });
-
+  return this.http.get<any>(this.tokenUrl, { headers }).pipe(
+      switchMap(user => {
+          if (!user) {
+              this.isLoading = false;
+              return of(null); // Kullanıcı bulunamadıysa null döndürüyoruz
           }
-          return user;
-        }),
-        catchError(this.handleError)  // Hata yönetimi
-      );
-    } else {
-      return new Observable<any>(observer => observer.next(null)); // Token yoksa null döndür
-    }
-  }
 
+          this.userName = user.username;
+          this.userId = user.id;
+
+          // Kullanıcının rollerini alıp ekliyoruz
+          return this.getUserRoles(user.id).pipe(
+              map(roles => {
+                  user.roles = roles; // Kullanıcının rollerini ekliyoruz
+                  this.isLoading = false;  // Kullanıcı ve rol bilgileri yüklendiğinde loading durumu false olur
+                  return user; // Güncellenmiş kullanıcı verisini döndürüyoruz
+              })
+          );
+      }),
+      catchError(err => {
+          this.isLoading = false;
+          return of(null); // Hata durumunda null döndürüyoruz
+      })
+  );
+}
+
+
+
+get isUserLoading(): boolean {
+  return this.isLoading;
+}
   getUserName(): string | null {
     console.log(this.userName);
     return this.userName;

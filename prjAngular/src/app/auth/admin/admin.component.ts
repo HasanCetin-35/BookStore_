@@ -38,4 +38,7 @@ export class AdminComponent implements OnInit {
   getComment(){
     this.router.navigate(['/admin/comment-approved']);
   }
+  getRoleCreation(){
+    this.router.navigate(['/admin/roleCreation'])
+  }
 }

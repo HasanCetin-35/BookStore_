@@ -14,6 +14,7 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
 import { AdminRolesComponent } from './admin-roles/admin-roles.component';
 import { UnauthorizedComponent } from '../unauthorized/unauthorized.component';
 import { CommentApprovalComponent } from './comment-approval/comment-approval.component';
+import { RoleCreationComponent } from './roleCreation/roleCreation.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { CommentApprovalComponent } from './comment-approval/comment-approval.co
     AdminUsersComponent,
     CommentComponent,
     BookDetailComponent,
-    AdminRolesComponent, 
+    AdminRolesComponent,
+    RoleCreationComponent, 
     UnauthorizedComponent, CommentApprovalComponent
   ],
   imports: [

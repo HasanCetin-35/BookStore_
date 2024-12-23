@@ -48,6 +48,8 @@ namespace MyProject.Services
                           where user.Id == userId
                           select user).FirstOrDefaultAsync();
         }
+        
+        
 
         public async Task UpdateUserAsync(Guid userId, User updatedUser)
         {

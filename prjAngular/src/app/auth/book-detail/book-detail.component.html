@@ -17,7 +17,9 @@
         <td>{{ book.author }}</td>
         <td>{{ book.category }}</td>
         <td>
-          <button (click)="deleteBook(book.id)" class="btn btn-danger btn-sm">
+          <button 
+          *ngIf="canDeleteBook" 
+          (click)="deleteBook(book.id)" class="btn btn-danger btn-sm">
             <i class="bi bi-trash"></i> Sil
           </button>
         </td>

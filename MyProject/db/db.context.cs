@@ -10,8 +10,10 @@ namespace MyProject
         public required DbSet<User> Users { get; set; }
         public required DbSet<Comment> Comments { get; set; }
         public required DbSet<Book> Books { get; set; }
-        public required DbSet<Role> Roles { get; set; }  
-        public required DbSet<UserRole> UserRoles { get; set; }  
+        public required DbSet<Role> Roles { get; set; }
+        public required DbSet<UserRole> UserRoles { get; set; }
+        public required DbSet<Permission> Permission { get; set; }
+        public required DbSet<RolePermission> RolePermission { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,12 +22,29 @@ namespace MyProject
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<Comment>().ToTable("comment");
             modelBuilder.Entity<Book>().ToTable("books");
-            modelBuilder.Entity<Role>().ToTable("roles"); 
+            modelBuilder.Entity<Role>().ToTable("roles");
             modelBuilder.Entity<UserRole>().ToTable("UserRoles");
+            modelBuilder.Entity<Permission>().ToTable("permissions");
+            modelBuilder.Entity<RolePermission>().ToTable("rolepermissions");
 
             // User -> UserRoles
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            modelBuilder.Entity<RolePermission>()
+                .HasKey(rp => new { rp.RoleId, rp.PermissionId }); // Composite Key
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(rp => rp.Role)
+                .WithMany(r => r.RolePermissions)
+                .HasForeignKey(rp => rp.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(rp => rp.Permission)
+                .WithMany(p => p.RolePermissions)
+                .HasForeignKey(rp => rp.PermissionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)
@@ -55,7 +74,7 @@ namespace MyProject
             // Comment -> User
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.User)
-                .WithMany(u => u.CommentIds) 
+                .WithMany(u => u.CommentIds)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 

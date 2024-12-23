@@ -27,6 +27,7 @@ builder.Services.AddScoped<UserRoleService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<RoleManagementService>();
 builder.Services.AddScoped<CurrentUserAttribute>();
+builder.Services.AddScoped<PermissionService>();
 
 
 // AddControllersWithViews()'i Build()'den önce ekleyin

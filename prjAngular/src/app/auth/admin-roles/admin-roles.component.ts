@@ -7,12 +7,13 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./admin-roles.component.css']
 })
 export class AdminRolesComponent implements OnInit {
-  users: any[] = []; 
-  successMessage: string = ''; 
-  errorMessage: string = ''; 
-  isLoading: boolean = false; 
-  roleToAdd: { [key: string]: string } = {}; 
-  searchText: string = ''; 
+  users: any[] = [];
+  roles: any[] = [];
+  successMessage: string = '';
+  errorMessage: string = '';
+  isLoading: boolean = false;
+  roleToAdd: { [key: string]: string } = {};
+  searchText: string = '';
 
   private apiUrl = 'http://localhost:5041/api/Users';
 
@@ -20,6 +21,7 @@ export class AdminRolesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers();
+    this.getAllRoles();
   }
 
   getUsers(): void {
@@ -44,14 +46,27 @@ export class AdminRolesComponent implements OnInit {
       }
     );
   }
+  getAllRoles(): void {
+    const rolesApiUrl = 'http://localhost:5041/api/roles/get-all-roles';
+    this.http.get<any[]>(rolesApiUrl).subscribe(
+      (response) => {
+        this.roles = response;
+      },
+      (error) => {
+        this.errorMessage = 'Roller alınırken bir hata oluştu.';
+        console.error(error);
+      }
+    );
+  }
 
   // Kullanıcının rollerini al
   getUserRoles(userId: string): void {
-    this.http.get<string[]>(`${this.apiUrl}/${userId}/roles`).subscribe(
-      (roles) => {
+    this.http.get<{ roles: string[] }>(`${this.apiUrl}/${userId}/roles`).subscribe(
+      (response) => {
+        const roles = response.roles || [];  // API yanıtındaki "roles" dizisini alıyoruz
         const user = this.users.find(u => u.id === userId);
         if (user) {
-          user.roles = roles;  // User'ın rol listesini güncelle
+          user.roles = roles;  // Kullanıcının rollerini güncelliyoruz
         }
       },
       (error) => {
@@ -59,6 +74,8 @@ export class AdminRolesComponent implements OnInit {
       }
     );
   }
+  
+  
 
   filteredUsers(): any[] {
     if (!this.searchText) {
@@ -112,5 +129,9 @@ export class AdminRolesComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+  getPermissionsForRole(roleName: string): string[] {
+    const role = this.roles.find(r => r.roleName === roleName);
+    return role ? role.permissions : [];
   }
 }

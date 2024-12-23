@@ -1,0 +1,60 @@
+<div class="container">
+    <h2>Role Creation</h2>
+    
+    <!-- Stage 1: Role Name Input -->
+    <div *ngIf="currentStage === 1">
+      <h3>Step 1: Create Role</h3>
+      <div class="form-group">
+        <label for="roleName">Role Name</label>
+        <input
+          type="text"
+          id="roleName"
+          class="form-control"
+          [(ngModel)]="roleName"
+          placeholder="Enter role name"
+        />
+      </div>
+      <button class="btn btn-primary mt-3" (click)="createRole()" [disabled]="isLoading">
+        {{ isLoading ? 'Creating...' : 'Create Role' }}
+      </button>
+    </div>
+  
+    <!-- Stage 2: Assign Permissions -->
+    <div *ngIf="currentStage === 2">
+      <h3>Step 2: Assign Permissions</h3>
+      <div *ngIf="permissions.length === 0">
+        <p>No permissions available.</p>
+      </div>
+      <div *ngIf="permissions.length > 0">
+        <h4>Select Permissions:</h4>
+        <div class="form-check" *ngFor="let permission of permissions">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [id]="permission.id"
+            [value]="permission.id"
+            (change)="togglePermission(permission.id)"
+            [checked]="selectedPermissions.includes(permission.id)"
+          />
+          <label class="form-check-label" [for]="permission.id">
+            {{ permission.permissionName }} - {{ permission.description }}
+          </label>
+        </div>
+      </div>
+      <button class="btn btn-primary mt-3" (click)="addPermissionsToRole()" [disabled]="isLoading">
+        {{ isLoading ? 'Assigning...' : 'Assign Permissions' }}
+      </button>
+      <button class="btn btn-secondary mt-3 ml-2" (click)="currentStage = 1">
+        Back to Step 1
+      </button>
+    </div>
+  
+    <!-- Success and Error Messages -->
+    <div *ngIf="successMessage" class="alert alert-success mt-3">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+  </div>
+  
