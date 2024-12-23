@@ -33,7 +33,15 @@ builder.Services.AddScoped<PermissionService>();
 // AddControllersWithViews()'i Build()'den önce ekleyin
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    });
 // CORS ekleme
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",

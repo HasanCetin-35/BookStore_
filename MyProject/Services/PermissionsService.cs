@@ -23,6 +23,12 @@ namespace MyProject.Services
         {
             return await _dbContext.Permission.FirstOrDefaultAsync(p => p.Id == id);
         }
+        public async Task<Permission?> GetPermissionByNameAsync(string permissionName)
+        {
+            return await _dbContext.Permission
+                .Where(p => p.PermissionName.ToLower() == permissionName.ToLower()) // ToLower kullanarak karşılaştırma yapıyoruz
+                .FirstOrDefaultAsync();
+        }
 
     }
 }

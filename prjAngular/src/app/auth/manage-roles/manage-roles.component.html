@@ -1,0 +1,96 @@
+<div *ngIf="isLoading" class="d-flex justify-content-center align-items-center loading">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Yükleniyor...</span>
+  </div>
+</div>
+
+<div *ngIf="!isLoading" class="container mt-4">
+  <!-- Başlık -->
+  <h2 class="text-center mb-4">Rolleri Yönet</h2>
+
+  <!-- Roller ve izinler listesi -->
+  <div *ngIf="roles.length > 0">
+    <div *ngFor="let role of roles" class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">{{ role.roleName }}</h5>
+        <p><strong>Mevcut İzinler:</strong></p>
+        <ul class="list-group">
+          <li *ngFor="let permission of role.permissions" class="list-group-item d-flex justify-content-between align-items-center">
+            {{ permission }}
+            <input type="checkbox" 
+                   [checked]="permissionsToRemove.includes(permission)" 
+                   (change)="toggleRemovePermission(permission)" 
+                   class="form-check-input" />
+          </li>
+        </ul>
+        <button class="btn btn-primary mt-3" (click)="editPermissions(role)">İzinleri Düzenle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Eğer roller yoksa mesaj -->
+  <div *ngIf="roles.length === 0" class="alert alert-info">
+    Henüz hiçbir rol bulunmamaktadır.
+  </div>
+
+  <!-- İzinleri düzenlemek için modal -->
+  <div *ngIf="selectedRole" class="modal fade show" style="display: block;" tabindex="-1" aria-labelledby="permissionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="permissionsModalLabel">{{ selectedRole.roleName }} İçin İzinleri Düzenle</h5>
+          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Mevcut İzinler (Kaldırılacak İzinler) -->
+          <p><strong>Mevcut İzinler (Kaldırılacak):</strong></p>
+          <ul class="list-group mb-3">
+            <li *ngFor="let permission of selectedRole.permissions" class="list-group-item d-flex justify-content-between align-items-center">
+              {{ permission }}
+              <input type="checkbox" 
+                     [checked]="permissionsToRemove.includes(permission)" 
+                     (change)="toggleRemovePermission(permission)" 
+                     class="form-check-input" />
+            </li>
+          </ul>
+
+          <div *ngIf="permissionsToRemove.length === 0" class="alert alert-warning">
+            Henüz hiçbir izin seçilmedi.
+          </div>
+
+          <!-- Yeni izin eklemek için seçenekler -->
+          <p><strong>Yeni İzinler Ekleyin:</strong></p>
+          <div *ngIf="availablePermissions.length > 0">
+            <div *ngFor="let permission of availablePermissions" class="form-check mb-2">
+              <input type="checkbox" 
+                     [checked]="isPermissionSelected(permission.permissionName)" 
+                     (change)="toggleAddPermission(permission.permissionName)" 
+                     class="form-check-input" id="permission-{{ permission.permissionName }}">
+              <label class="form-check-label" for="permission-{{ permission.permissionName }}">
+                {{ permission.permissionName }}
+              </label>
+            </div>
+          </div>
+
+          <div *ngIf="availablePermissions.length === 0" class="alert alert-info">
+            Yeni izin eklemek için izin bulunmamaktadır.
+          </div>
+
+          <!-- Başarılı güncelleme mesajı -->
+          <div *ngIf="successMessage" class="alert alert-success mt-3">
+            {{ successMessage }}
+          </div>
+
+          <!-- Hata mesajı -->
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+            {{ errorMessage }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" (click)="removePermissionsFromRole()">İzinleri Kaldır</button>
+          <button class="btn btn-success" (click)="addPermissionsToRole()">İzinleri Ekle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

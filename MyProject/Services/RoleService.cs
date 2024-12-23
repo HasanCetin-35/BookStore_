@@ -196,6 +196,137 @@ namespace MyProject.Services
 
             return roleDtos;
         }
+        public async Task<bool> UpdateRolePermissionsAsync(Guid roleId, List<Guid> newPermissionIds)
+        {
+            var role = await _context.Roles
+                .Include(r => r.RolePermissions)
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role == null)
+            {
+                throw new InvalidOperationException("Role not found.");
+            }
+
+            // Mevcut izinleri kontrol et
+            var currentPermissions = role.RolePermissions.Select(rp => rp.PermissionId).ToList();
+
+            // Eklenmesi gereken izinler (mevcut izinlerde olmayanlar)
+            var permissionsToAdd = newPermissionIds.Except(currentPermissions)
+                .Select(permissionId => new RolePermission
+                {
+                    RoleId = roleId,
+                    PermissionId = permissionId
+                }).ToList();
+
+            // Yeni izinleri ekle (mevcut izinler silinmeden sadece ekleme yapılır)
+            if (permissionsToAdd.Any())
+            {
+                await _context.RolePermission.AddRangeAsync(permissionsToAdd);
+            }
+
+            // Değişiklikleri kaydet
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
+        }
+
+        public async Task<List<Permission>> GetPermissionsByRoleIdAsync(Guid roleId)
+        {
+            var role = await _context.Roles
+                .Include(r => r.RolePermissions)
+                .ThenInclude(rp => rp.Permission)
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role == null)
+            {
+                throw new InvalidOperationException("Role not found.");
+            }
+
+            return role.RolePermissions.Select(rp => rp.Permission).ToList();
+        }
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<bool> AddPermissionsToRoleAsync(Guid roleId, List<Guid> permissionIds)
+        {
+            var role = await _context.Roles
+                .Include(r => r.RolePermissions)
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role == null)
+            {
+                throw new InvalidOperationException("Role not found.");
+            }
+
+            // Mevcut izinler
+            var currentPermissions = role.RolePermissions.Select(rp => rp.PermissionId).ToList();
+
+            // Eklenmesi gereken izinler (mevcut izinlerde olmayanlar)
+            var permissionsToAdd = permissionIds
+                .Where(permissionId => !currentPermissions.Contains(permissionId)) // Mevcut izinlerde olmayanları seç
+                .Select(permissionId => new RolePermission
+                {
+                    RoleId = roleId,
+                    PermissionId = permissionId
+                }).ToList();
+
+            // Yeni izinleri ekle
+            if (permissionsToAdd.Any())
+            {
+                await _context.RolePermission.AddRangeAsync(permissionsToAdd);
+            }
+
+            // Değişiklikleri kaydet
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
+        }
+
+        public async Task<bool> RemovePermissionsFromRoleAsync(Guid roleId, List<Guid> permissionIds)
+        {
+            var role = await _context.Roles
+                .Include(r => r.RolePermissions)
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role == null)
+            {
+                throw new InvalidOperationException("Role not found.");
+            }
+
+            // Mevcut izinler
+            var currentPermissions = role.RolePermissions.Select(rp => rp.PermissionId).ToList();
+
+            // Silinmesi gereken izinler (mevcut izinlerde olup, yeni listede olmayanlar)
+            var permissionsToRemove = permissionIds
+                .Where(permissionId => currentPermissions.Contains(permissionId)) // Mevcut izinlerde olanları seç
+                .ToList();
+
+            // İzinleri kaldır
+            if (permissionsToRemove.Any())
+            {
+                var rolePermissionsToRemove = role.RolePermissions
+                    .Where(rp => permissionsToRemove.Contains(rp.PermissionId))
+                    .ToList();
+
+                _context.RolePermission.RemoveRange(rolePermissionsToRemove);
+            }
+
+            // Değişiklikleri kaydet
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
+        }
+
+
+
 
 
     }

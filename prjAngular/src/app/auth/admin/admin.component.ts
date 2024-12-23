@@ -41,4 +41,7 @@ export class AdminComponent implements OnInit {
   getRoleCreation(){
     this.router.navigate(['/admin/roleCreation'])
   }
+  getRoleManage(){
+    this.router.navigate(['/admin/manageRoles'])
+  }
 }

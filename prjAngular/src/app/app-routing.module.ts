@@ -16,6 +16,7 @@ import { CommentApprovalComponent } from './auth/comment-approval/comment-approv
 import { RoleCreationComponent } from './auth/roleCreation/roleCreation.component';
 import { UserGuard } from './auth/user_guard';
 import { AdminGuard } from './auth/admin_guard';
+import { ManageRolesComponent } from './auth/manage-roles/manage-roles.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,7 @@ const routes: Routes = [
       { path: 'role', component: AdminRolesComponent },
       { path: 'comment-approved', component: CommentApprovalComponent },
       { path: 'roleCreation', component: RoleCreationComponent },
+      { path: 'manageRoles', component: ManageRolesComponent }
     ],
   },
   {

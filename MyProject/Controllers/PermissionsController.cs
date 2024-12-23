@@ -35,6 +35,18 @@ namespace MyProject.Controllers
             return Ok(permission);
         }
 
+         [HttpGet("by-name/{permissionName}")]
+        public async Task<IActionResult> GetPermissionByName(string permissionName)
+        {
+            var permission = await _permissionService.GetPermissionByNameAsync(permissionName);
+            
+            if (permission == null)
+            {
+                return NotFound(new { Message = "Permission not found" });
+            }
+            
+            return Ok(permission);
+        }
         
     }
 }

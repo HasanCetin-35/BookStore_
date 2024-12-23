@@ -107,6 +107,85 @@ namespace MyProject.Controllers
                 return BadRequest($"Error occurred while getting user roles: {ex.Message}");
             }
         }
+        [HttpPut("{roleId:guid}/permissions")]
+        public async Task<IActionResult> UpdateRolePermissions(Guid roleId, [FromBody] UpdateRolePermissionsDto updateDto)
+        {
+            try
+            {
+                var isUpdated = await _roleService.UpdateRolePermissionsAsync(roleId, updateDto.PermissionIds);
+
+                if (!isUpdated)
+                {
+                    return BadRequest(new { Message = "Failed to update role permissions." });
+                }
+
+                return Ok(new { Message = "Role permissions updated successfully." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Genel hata durumunda
+                return StatusCode(500, new { Message = "An error occurred while updating role permissions.", Details = ex.Message });
+            }
+        }
+        [HttpGet("{roleId:guid}/permissions")]
+        public async Task<IActionResult> GetPermissionsByRoleId(Guid roleId)
+        {
+            try
+            {
+                var permissions = await _roleService.GetPermissionsByRoleIdAsync(roleId);
+                return Ok(permissions);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An unexpected error occurred.", Details = ex.Message });
+            }
+        }
+
+        [HttpPost("{roleId}/permissions/add")]
+        public async Task<IActionResult> AddPermissionsToRole(Guid roleId, [FromBody] List<Guid> permissionIds)
+        {
+            try
+            {
+                var result = await _roleService.AddPermissionsToRoleAsync(roleId, permissionIds);
+                if (result)
+                {
+                    return Ok(new { message = "Permissions added successfully." });
+                }
+                return BadRequest(new { message = "Failed to add permissions." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+            }
+        }
+
+        // İzinleri kaldırmak için endpoint
+        [HttpPost("{roleId}/permissions/remove")]
+        public async Task<IActionResult> RemovePermissionsFromRole(Guid roleId, [FromBody] List<Guid> permissionIds)
+        {
+            try
+            {
+                var result = await _roleService.RemovePermissionsFromRoleAsync(roleId, permissionIds);
+                if (result)
+                {
+                    return Ok(new { message = "Permissions removed successfully." });
+                }
+                return BadRequest(new { message = "Failed to remove permissions." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+            }
+        }
+
 
     }
 

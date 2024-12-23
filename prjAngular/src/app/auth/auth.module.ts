@@ -15,6 +15,7 @@ import { AdminRolesComponent } from './admin-roles/admin-roles.component';
 import { UnauthorizedComponent } from '../unauthorized/unauthorized.component';
 import { CommentApprovalComponent } from './comment-approval/comment-approval.component';
 import { RoleCreationComponent } from './roleCreation/roleCreation.component';
+import { ManageRolesComponent } from './manage-roles/manage-roles.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { RoleCreationComponent } from './roleCreation/roleCreation.component';
     BookDetailComponent,
     AdminRolesComponent,
     RoleCreationComponent, 
-    UnauthorizedComponent, CommentApprovalComponent
+    UnauthorizedComponent, CommentApprovalComponent, ManageRolesComponent
   ],
   imports: [
     CommonModule,
