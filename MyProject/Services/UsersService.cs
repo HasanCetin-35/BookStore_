@@ -35,7 +35,6 @@ namespace MyProject.Services
                           where user.Email == email
                           select user).FirstOrDefaultAsync();
         }
-
         public async Task CreateAsync(User newUser)
         {
             await _dbContext.Users.AddAsync(newUser);
@@ -49,8 +48,6 @@ namespace MyProject.Services
                           select user).FirstOrDefaultAsync();
         }
         
-        
-
         public async Task UpdateUserAsync(Guid userId, User updatedUser)
         {
             var existingUser = await (from user in _dbContext.Users
@@ -123,29 +120,4 @@ namespace MyProject.Services
         }
     }
 
-
-    // //Kullanıcıya ait yorumları getir
-    //  public async Task<List<Comment>> GetUserCommentsAsync(Guid userId)
-    // {
-    //     var user = await GetUserByIdAsync(userId);
-
-    //     if (user == null || user.CommentIds == null || user.CommentIds.Count == 0)
-    //     {
-    //         return new List<Comment>(); // Eğer kullanıcı yoksa veya yorum yapmamışsa boş liste döner
-    //     }
-
-    //     var userComments = new List<Comment>();
-
-    //     // Kullanıcının yorumlarını almak için her bir yorum ID'sini sorgula
-    //     foreach (var commentId in user.CommentIds)
-    //     {
-    //         var comment = await _commentsService.GetCommentByIdAsync(commentId); // commentId burada Guid olmalı
-    //         if (comment != null)
-    //         {
-    //             userComments.Add(comment);
-    //         }
-    //     }
-
-    //     return userComments;
-    // }
 }

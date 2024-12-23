@@ -11,8 +11,6 @@ namespace MyProject.Services
         {
             _dbContext = context;
         }
-
-
         public async Task AddRoleToUserAsync(Guid userId, string roleName)
         {
 
@@ -41,7 +39,6 @@ namespace MyProject.Services
                 await _dbContext.SaveChangesAsync();
             }
         }
-
 
         public async Task RemoveRoleFromUserAsync(Guid userId, string roleName)
 

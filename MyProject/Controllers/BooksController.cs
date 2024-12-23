@@ -25,34 +25,34 @@ namespace BookStoreApi.Controllers
 
         // Kitaplarla birlikte yorumları getir
         [HttpGet("books-with-comments")]
-public async Task<ActionResult> GetBooksWithComments()
-{
-    // Tüm kitapları ve her kitap için yorumları birlikte almak
-    var books = await _booksService.GetAsync(); // Kitapları al
-    var bookIds = books.Select(b => b.Id).ToList(); // Kitap ID'lerini al
+        public async Task<ActionResult> GetBooksWithComments()
+        {
+            // Tüm kitapları ve her kitap için yorumları birlikte almak
+            var books = await _booksService.GetAsync(); // Kitapları al
+            var bookIds = books.Select(b => b.Id).ToList(); // Kitap ID'lerini al
 
-    // Yorumları tüm kitaplar için bir kerede al
-    var allComments = await _commentsService.GetCommentsByBookIdsAsync(bookIds); // Kitapların ID'lerine göre yorumları al
+            // Yorumları tüm kitaplar için bir kerede al
+            var allComments = await _commentsService.GetCommentsByBookIdsAsync(bookIds); // Kitapların ID'lerine göre yorumları al
 
-    // Kitaplar ve yorumları birleştiriyoruz
-    var booksWithComments = books.Select(book => new
-    {
-        BookId = book.Id,
-        BookName = book.BookName,
-        Author = book.Author,
-        Category = book.Category,
-        Comments = allComments.Where(c => c.BookId == book.Id)
-            .Select(comment => new
+            // Kitaplar ve yorumları birleştiriyoruz
+            var booksWithComments = books.Select(book => new
             {
-                CommentId = comment.Id,
-                CommentText = comment.Text,
-                CommentIsApproved= comment.IsApproved,
-                UserId = comment.UserId
-            })
-    }).ToList();
+                BookId = book.Id,
+                BookName = book.BookName,
+                Author = book.Author,
+                Category = book.Category,
+                Comments = allComments.Where(c => c.BookId == book.Id)
+                    .Select(comment => new
+                    {
+                        CommentId = comment.Id,
+                        CommentText = comment.Text,
+                        CommentIsApproved= comment.IsApproved,
+                        UserId = comment.UserId
+                    })
+            }).ToList();
 
-    return Ok(booksWithComments);
-}
+            return Ok(booksWithComments);
+        }
 
         // ID'ye göre kitap getir
         [HttpGet("{id}")]

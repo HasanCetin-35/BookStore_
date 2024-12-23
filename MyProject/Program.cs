@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyProject;
-using MyProject.Decorators;
+
 
 using MyProject.Services;
 //using Serilog;
@@ -26,7 +26,6 @@ builder.Services.AddScoped<CommentsService>();
 builder.Services.AddScoped<UserRoleService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<RoleManagementService>();
-builder.Services.AddScoped<CurrentUserAttribute>();
 builder.Services.AddScoped<PermissionService>();
 
 

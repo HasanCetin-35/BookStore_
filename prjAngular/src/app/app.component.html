@@ -9,7 +9,7 @@
     </ng-container>
 
     <ng-template #loggedIn>
-      <span class="navbar-welcome">Hoşgeldiniz</span>
+      <span class="navbar-welcome">Hoşgeldiniz </span>
 
       <!-- Kullanıcı Paneli ve Admin Paneli -->
       <ng-container *ngIf="authService.hasRole('user')">
@@ -28,7 +28,7 @@
         <a routerLink="/addbooks" class="navbar-link navbar-dashboard-button">Kitap Ekle</a>
       </ng-container>
       
-      <ng-container *ngIf="authService.hasPermission(['ApproveComment','ViewCommentStatus'])">
+      <ng-container *ngIf="authService.hasPermission(['ApproveComment','ViewPendingComments'])">
         <a routerLink="/comment-approved" class="navbar-link navbar-dashboard-button">Bekleyen Yorumlar</a>
       </ng-container>
 

@@ -73,26 +73,6 @@ namespace MyProject.Controllers
                 return BadRequest($"Error occurred while assigning permissions: {ex.Message}");
             }
         }
-        [HttpPost("assign-role/{userId}")]
-        public async Task<IActionResult> AssignRoleToUser([FromRoute] Guid userId, [FromBody] Guid roleId)
-        {
-            try
-            {
-                // Kullanıcıya rol ataması yapılıyor
-                var result = await _roleService.AssignRoleToUserAsync(userId, roleId);
-
-                if (result)
-                {
-                    return Ok("Role assigned successfully.");
-                }
-
-                return BadRequest("Failed to assign role.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error occurred while assigning role: {ex.Message}");
-            }
-        }
 
         [HttpGet("get-user-roles/{userId}")]
         public async Task<IActionResult> GetUserRolesWithPermissions([FromRoute] Guid userId)
@@ -107,48 +87,6 @@ namespace MyProject.Controllers
                 return BadRequest($"Error occurred while getting user roles: {ex.Message}");
             }
         }
-        [HttpPut("{roleId:guid}/permissions")]
-        public async Task<IActionResult> UpdateRolePermissions(Guid roleId, [FromBody] UpdateRolePermissionsDto updateDto)
-        {
-            try
-            {
-                var isUpdated = await _roleService.UpdateRolePermissionsAsync(roleId, updateDto.PermissionIds);
-
-                if (!isUpdated)
-                {
-                    return BadRequest(new { Message = "Failed to update role permissions." });
-                }
-
-                return Ok(new { Message = "Role permissions updated successfully." });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                // Genel hata durumunda
-                return StatusCode(500, new { Message = "An error occurred while updating role permissions.", Details = ex.Message });
-            }
-        }
-        [HttpGet("{roleId:guid}/permissions")]
-        public async Task<IActionResult> GetPermissionsByRoleId(Guid roleId)
-        {
-            try
-            {
-                var permissions = await _roleService.GetPermissionsByRoleIdAsync(roleId);
-                return Ok(permissions);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = "An unexpected error occurred.", Details = ex.Message });
-            }
-        }
-
         [HttpPost("{roleId}/permissions/add")]
         public async Task<IActionResult> AddPermissionsToRole(Guid roleId, [FromBody] List<Guid> permissionIds)
         {
@@ -185,6 +123,7 @@ namespace MyProject.Controllers
                 return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
             }
         }
+        
         [HttpDelete("{roleId}")]
         public async Task<IActionResult> RemoveRole(Guid roleId)
         {

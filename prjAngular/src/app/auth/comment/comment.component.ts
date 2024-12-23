@@ -14,7 +14,8 @@ export class CommentComponent implements OnInit {
   isLoading = false; // Yükleme durumu kontrolü
   successMessage: string = '';
   errorMessage: string = '';
-  canDeleteComment: boolean = false; // Delete iznine sahip olup olmadığını kontrol etmek için
+  canDeleteComment: boolean = false;
+  canStatus:boolean=false; 
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -46,6 +47,7 @@ export class CommentComponent implements OnInit {
           // Kullanıcının izinlerini kontrol et
           this.canDeleteComment =
             permissions.includes('DeleteComment') || this.authService.isAdmin(); // Admin ise veya DeleteComment izni varsa true
+          this.canStatus=permissions.includes('ViewCommentStatus')|| this.authService.isAdmin();
         });
       }
     });

@@ -19,7 +19,23 @@ export class AppComponent {
     this.authService.getUserByToken().subscribe(user => {
       if (user) {
         this.userName = user.username;  // Kullanıcı adını atıyoruz
-        console.log(this.userName)
+        console.log(",,,,,,,,,,,,,,",user.id)
+        this.authService.getUserPermissions(user.id).subscribe(permissions => {
+          console.log("Kullanıcı İzinleri:", permissions);
+
+          // Kullanıcı rolleri ve izinlerine göre yönlendirme yap
+          this.authService.getUserRoles(user.id).subscribe(roles => {
+            console.log("Kullanıcı Rolleri:", roles);
+
+            if (roles.includes('Admin')) {
+              this.router.navigate(['/users']);
+            } else if (roles.includes('user')) {
+              this.router.navigate(['/user']);
+            } else {
+              this.router.navigate(['/login']);
+            }
+          });
+        });
       }
     });
   }

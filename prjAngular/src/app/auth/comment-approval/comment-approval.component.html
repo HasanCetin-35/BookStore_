@@ -6,8 +6,8 @@
       <tr>
         <th>Yorum</th>
         <th>Durum</th>
-        <th>Onayla</th>
-        <th>Reddet</th>
+        <th >Onayla</th>
+        <th >Reddet</th>
       </tr>
     </thead>
     <tbody>
@@ -18,8 +18,9 @@
           <span *ngIf="comment.isApproved === 'Rejected'">Reddedildi</span>
           <span *ngIf="comment.isApproved === 'Pending'">Onay Bekliyor</span>
         </td>
-        <td>
+        <td *ngIf="canApproved">
           <button
+
             *ngIf="comment.isApproved === 'Pending'"
             class="btn btn-success"
             (click)="approveComment(comment.id)"
@@ -27,7 +28,7 @@
             Onayla
           </button>
         </td>
-        <td>
+        <td *ngIf="canApproved">
           <button
             *ngIf="comment.isApproved === 'Pending'"
             class="btn btn-danger"

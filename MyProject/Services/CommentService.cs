@@ -57,10 +57,6 @@ namespace MyProject.Services
                                  .Where(c => bookIds.Contains(c.BookId))
                                  .ToListAsync();
         }
-        public async Task<List<Comment>> GetCommentsByBookIdAsync(Guid bookId) =>
-           await _dbContext.Comments
-               .Where(c => c.BookId == bookId)
-               .ToListAsync();
         public async Task<List<Comment>> GetAllCommentsAsync()
         {
             return await _dbContext.Comments

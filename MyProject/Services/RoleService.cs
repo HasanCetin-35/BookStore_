@@ -24,19 +24,6 @@ namespace MyProject.Services
                 .FirstOrDefaultAsync();
         }
 
-        // Yeni bir rol ekleyin
-        public async Task AddRoleAsync(Role role)
-        {
-            if (await _context.Roles.AnyAsync(r => r.RoleName == role.RoleName))
-            {
-                throw new InvalidOperationException("Role already exists.");
-            }
-
-            _context.Roles.Add(role);
-            await _context.SaveChangesAsync();
-        }
-
-        // Bir rolü sil
         public async Task RemoveRoleAsync(Guid roleId)
         {
             var role = await _context.Roles.FindAsync(roleId);
@@ -109,38 +96,6 @@ namespace MyProject.Services
             }
         }
 
-        public async Task<bool> AssignRoleToUserAsync(Guid userId, Guid roleId)
-        {
-            // Kullanıcının mevcut olup olmadığını kontrol et
-            var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
-            if (!userExists)
-            {
-                throw new InvalidOperationException("User not found.");
-            }
-
-            // Rolün mevcut olup olmadığını kontrol et
-            var roleExists = await _context.Roles.AnyAsync(r => r.Id == roleId);
-            if (!roleExists)
-            {
-                throw new InvalidOperationException("Role not found.");
-            }
-
-            // Kullanıcıya rol ataması yap
-            var userRole = new UserRole
-            {
-                UserId = userId,
-                RoleId = roleId
-            };
-
-            // UserRoles tablosuna ekle
-            _context.UserRoles.Add(userRole);
-
-            // Değişiklikleri kaydet
-            var result = await _context.SaveChangesAsync();
-
-            return result > 0;  // Eğer kaydetme başarılıysa true döner
-        }
-
         public async Task<List<UserRoleDto>> GetUserRolesWithPermissionsAsync(Guid userId)
         {
             // Kullanıcı ve rollerin bilgilerini getir
@@ -197,66 +152,7 @@ namespace MyProject.Services
 
             return roleDtos;
         }
-        public async Task<bool> UpdateRolePermissionsAsync(Guid roleId, List<Guid> newPermissionIds)
-        {
-            var role = await _context.Roles
-                .Include(r => r.RolePermissions)
-                .FirstOrDefaultAsync(r => r.Id == roleId);
-
-            if (role == null)
-            {
-                throw new InvalidOperationException("Role not found.");
-            }
-
-            // Mevcut izinleri kontrol et
-            var currentPermissions = role.RolePermissions.Select(rp => rp.PermissionId).ToList();
-
-            // Eklenmesi gereken izinler (mevcut izinlerde olmayanlar)
-            var permissionsToAdd = newPermissionIds.Except(currentPermissions)
-                .Select(permissionId => new RolePermission
-                {
-                    RoleId = roleId,
-                    PermissionId = permissionId
-                }).ToList();
-
-            // Yeni izinleri ekle (mevcut izinler silinmeden sadece ekleme yapılır)
-            if (permissionsToAdd.Any())
-            {
-                await _context.RolePermission.AddRangeAsync(permissionsToAdd);
-            }
-
-            // Değişiklikleri kaydet
-            var result = await _context.SaveChangesAsync();
-
-            return result > 0;
-        }
-
-        public async Task<List<Permission>> GetPermissionsByRoleIdAsync(Guid roleId)
-        {
-            var role = await _context.Roles
-                .Include(r => r.RolePermissions)
-                .ThenInclude(rp => rp.Permission)
-                .FirstOrDefaultAsync(r => r.Id == roleId);
-
-            if (role == null)
-            {
-                throw new InvalidOperationException("Role not found.");
-            }
-
-            return role.RolePermissions.Select(rp => rp.Permission).ToList();
-        }
         
-
-
-
-
-
-
-
-
-
-
-
         public async Task<bool> AddPermissionsToRoleAsync(Guid roleId, List<Guid> permissionIds)
         {
             var role = await _context.Roles
@@ -326,10 +222,6 @@ namespace MyProject.Services
 
             return result > 0;
         }
-
-
-
-
 
     }
 }

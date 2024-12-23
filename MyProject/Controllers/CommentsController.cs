@@ -3,7 +3,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using MyProject.Models;
 using MyProject.Services;
-using MyProject.Decorators;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
@@ -265,25 +264,5 @@ namespace MyProject.Controllers
             return  Ok(new { message = "Yorum reddedildi." });
         }
 
-        // [HttpGet("user-comments")]
-        // [CurrentUser]
-        // public IActionResult GetUserComments(string userId)
-        // {
-        //     // JWT içinden userId'yi alıyoruz
-        //     if (string.IsNullOrEmpty(userId))
-        //     {
-        //         return Unauthorized("Kullanıcı kimliği doğrulanamadı.");
-        //     }
-
-        //     // Sadece userId'nin çıktısını döndürmek
-        //     return Ok(new { UserId = userId });
-        // }
-        // [HttpGet("current")]
-        // [CurrentUser]
-        // public IActionResult GetCurrentUser(string userId)
-        // {
-
-        //     return Ok(new { UserId = userId });
-        // }
     }
 }

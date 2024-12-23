@@ -19,8 +19,8 @@
         <th>Kullanıcı Adı</th>
         <th>Email</th>
         <th>Kitap</th>
-        <th>Durum</th>
-        <th>İşlemler</th>
+        <th *ngIf="canStatus">Durum</th>
+        <th *ngIf="canDeleteComment">İşlemler</th>
       </tr>
     </thead>
     <tbody>
@@ -32,7 +32,7 @@
         <td>{{ comment.book?.bookName }}</td>
         <td>
           <!-- Durumun metin olarak gösterilmesi -->
-          <ng-container [ngSwitch]="comment.isApproved">
+          <ng-container *ngIf="canStatus" [ngSwitch]="comment.isApproved">
             <span *ngSwitchCase="'Pending'" class="text-warning">Bekliyor</span>
             <span *ngSwitchCase="'Approved'" class="text-success">Onaylandı</span>
             <span *ngSwitchCase="'Rejected'" class="text-danger">Reddedildi</span>

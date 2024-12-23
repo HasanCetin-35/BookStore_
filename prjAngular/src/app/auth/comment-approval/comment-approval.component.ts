@@ -10,11 +10,12 @@ import { AuthService } from '../auth.service';
 export class CommentApprovalComponent implements OnInit {
   comments: any[] = [];  // Yorumları tutacak dizi
   private apiUrl = 'http://localhost:5041/api/comments';  // Backend API URL
-
+  canApproved:boolean=false;
   constructor(private http: HttpClient, private authService: AuthService,private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadComments();  // Sayfa yüklendiğinde yorumları al
+    this.checkPermissions();
   }
 
   // Yorumları al
@@ -65,5 +66,18 @@ export class CommentApprovalComponent implements OnInit {
         }
       );
     }
+  }
+  checkPermissions(): void {
+    // Kullanıcının izinlerini al
+    this.authService.getUserByToken().subscribe((user) => {
+      if (user) {
+        this.authService.getUserPermissions(user.id).subscribe((permissions) => {
+          // Kullanıcının izinlerini kontrol et
+          this.canApproved =
+            permissions.includes('ApproveComment') || this.authService.isAdmin(); 
+          console.log(this.canApproved);
+        });
+      }
+    });
   }
 }

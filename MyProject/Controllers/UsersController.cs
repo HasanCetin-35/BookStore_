@@ -84,18 +84,6 @@ namespace MyProject.Controllers
             return Ok(new { message = "User registered successfully." });
         }
 
-
-
-        // [HttpGet("Login")]
-
-        // public async Task<IActionResult> Login(UserLoginDto userDto)
-        // {
-        //     if (userDto is null)
-        //     {
-        //         throw new ArgumentNullException(nameof(userDto));
-        //     }
-
-        // }
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto userLoginDto)
         {
@@ -116,10 +104,10 @@ namespace MyProject.Controllers
             var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
 
             var claims = new List<Claim>
-    {
-        new("nameid", user.Id.ToString()), // sub claim olarak da olabilir.
-        new(ClaimTypes.Email, user.Email), // kullanıcı e-posta bilgisi
-    };
+            {
+                new("nameid", user.Id.ToString()), // sub claim olarak da olabilir.
+                new(ClaimTypes.Email, user.Email), // kullanıcı e-posta bilgisi
+            };
 
             // Eğer birden fazla role varsa, her bir role için ayrı bir claim ekliyoruz
             if (user.Role != null)
@@ -163,46 +151,6 @@ namespace MyProject.Controllers
                 return StatusCode(500, new { message = "Kullanıcı silinirken bir hata oluştu.", error = ex.Message });
             }
         }
-        // [HttpPost("update-role")]
-        // public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDto updateRoleDto)
-        // {
-        //     var user = await _usersService.GetUserByIdAsync(updateRoleDto.UserId);
-
-        //     if (user == null)
-        //     {
-        //         return NotFound("Kullanıcı bulunamadı.");
-        //     }
-
-        //     if (updateRoleDto.Action == "add")
-        //     {
-        //         if (!user.Role.Contains(updateRoleDto.Role))
-        //         {
-        //             user.Role.Add(updateRoleDto.Role);
-        //         }
-        //         else
-        //         {
-        //             return BadRequest("Bu rol zaten kullanıcıda mevcut.");
-        //         }
-        //     }
-        //     else if (updateRoleDto.Action == "remove")
-        //     {
-        //         if (user.Role.Contains(updateRoleDto.Role))
-        //         {
-        //             user.Role.Remove(updateRoleDto.Role);
-        //         }
-        //         else
-        //         {
-        //             return BadRequest("Bu rol kullanıcıda bulunmuyor.");
-        //         }
-        //     }
-        //     else
-        //     {
-        //         return BadRequest("Geçersiz işlem türü.");
-        //     }
-
-        //     await _usersService.UpdateUserAsync(user.Id, user);
-        //     return Ok("Kullanıcı rolü başarıyla güncellendi.");
-        // }
 
         [HttpPost("add-role")]
         public async Task<IActionResult> AddRoleToUser([FromBody] UpdateRoleDto updateRoleDto)
@@ -243,11 +191,6 @@ namespace MyProject.Controllers
 
             return Ok(new { roles = userRoles }); // 'roles' sarmalayıcı nesnesi ile döndürülüyor
         }
-
-
-
-
-
 
         [HttpGet("get-user-by-token")]
         [Authorize]
