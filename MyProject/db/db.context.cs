@@ -39,6 +39,7 @@ namespace MyProject
                 .WithMany(r => r.RolePermissions)
                 .HasForeignKey(rp => rp.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
+                //Restrict dene 
 
             modelBuilder.Entity<RolePermission>()
                 .HasOne(rp => rp.Permission)
